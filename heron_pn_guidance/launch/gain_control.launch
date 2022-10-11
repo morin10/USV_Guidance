@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+	<param name="K_gain"  value="0.00000008" />
+  <param name="default_thrust"  value="1" />
+  <param name="thrust_gain"  value="0.001" />
+</launch>

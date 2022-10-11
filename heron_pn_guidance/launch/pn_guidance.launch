@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+	<param name="K_gain"  value="0.00000008" />
+  <!-- <node name="gain_control" pkg="kaist_usv_con" type="gain_control.py" output="screen">
+        <param name="K_gain"  value="0.1" />
+  </node> -->
+  <!-- <node pkg="udp_base" type="wpl_publish" name="wpl_publish" /> -->
+  <node pkg="heron_pn_guidance" type="ublox_filter_node" name="ublox_filter_node" />
+  <node pkg="heron_pn_guidance" type="pn_guidance.py" name="pn_guidance_heron" output="screen" />
+</launch>
