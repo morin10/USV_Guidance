@@ -16,7 +16,6 @@ void Ublox_Filter::vel_callback(const geometry_msgs::TwistWithCovarianceStamped:
 void Ublox_Filter::gps_callback(const sensor_msgs::NavSatFix::ConstPtr &msgs)
 {
     int zone_ = 52;
-    lla2utm(msgs->latitude, msgs->longitude, msgs->altitude);
 
 	// Naive Filtering
     if (msgs->latitude == 0.0 && msgs->longitude == 0.0 && msgs->altitude == 0.0)
@@ -34,6 +33,7 @@ void Ublox_Filter::gps_callback(const sensor_msgs::NavSatFix::ConstPtr &msgs)
         //filter code here
         /////////
         //filter code here
+        lla2utm(msgs->latitude, msgs->longitude, msgs->altitude);
 
         own_ship_info.pose.pose.position.x = utm_[0];
         own_ship_info.pose.pose.position.y = utm_[1];
