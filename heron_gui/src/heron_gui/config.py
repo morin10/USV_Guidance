@@ -22,6 +22,8 @@ MAX_WP2PLOT = 5                                                             # nu
 GPS_SUBSCRIBER = "/ublox_gps/fix"   # ROSTOPIC sent from GPS sensor (Kingfisher)
 ODOM_SUBSCRIBER = "/heron_info"   # ROSTOPIC sent from 'heron_pn_guidance ublox_filter_node.cpp'
 
+WP_PUBLISHER = "/heron_info/waypoints"
+
 # COLOR PALETTE
 WAYPOINT_COLOR = "black"
 CURRENT_POS_COLOR = "red"
