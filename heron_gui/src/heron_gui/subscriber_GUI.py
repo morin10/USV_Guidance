@@ -32,7 +32,7 @@ class Heron_GUI(tk.Tk):
 
         # Synchronized subscriber for GPS(LLA) and Heron_LLA2UTM(UTM) message
         self.sub_lla = message_filters.Subscriber(CFG.GPS_SUBSCRIBER, NavSatFix)
-        self.sub_odom = message_filters.Subscriber(CFG.ODOM_SUBSCRIBER, PoseStamped)
+        self.sub_odom = message_filters.Subscriber(CFG.ODOM_SUBSCRIBER, Odometry)
         ts = message_filters.TimeSynchronizer([self.sub_lla, self.sub_odom], 10)
         ts.registerCallback(self.callback)
 
