@@ -31,10 +31,11 @@ class Heron_GUI(tk.Tk):
         self.waypoints = np.zeros((CFG.MAX_WP2PLOT,6))
 
         # Synchronized subscriber for GPS(LLA) and Heron_LLA2UTM(UTM) message
-        self.sub_lla = message_filters.Subscriber(CFG.GPS_SUBSCRIBER, NavSatFix)
-        self.sub_odom = message_filters.Subscriber(CFG.ODOM_SUBSCRIBER, Odometry)
-        ts = message_filters.TimeSynchronizer([self.sub_lla, self.sub_odom], 10)
-        ts.registerCallback(self.callback)
+        # self.sub_lla = message_filters.Subscriber(CFG.GPS_SUBSCRIBER, NavSatFix)
+        # self.sub_odom = message_filters.Subscriber(CFG.ODOM_SUBSCRIBER, Odometry)
+        # ts = message_filters.TimeSynchronizer([self.sub_lla, self.sub_odom], 10)
+        # ts.registerCallback(self.callback)
+        rospy.Subscriber(CFG.ODOM_SUBSCRIBER, Odometry, self.callback)
 
         self.wp_points = []
         self.wp_annots = []
@@ -151,10 +152,11 @@ class Heron_GUI(tk.Tk):
         f.close()
         print("WAYPOINTS are saved into CSV file")
 
-    def callback(self, data_lla, data_odom):
+    def callback(self, data_odom):
+        # print("Synchronized")
         # Set Current Position as LLA & UTM & Local_XYZ(the point position on map image (m))
-        self.lla_data = [data_lla.latitude, data_lla.longitude, data_lla.altitude]
-        self.lla_data = np.around(self.lla_data, decimals=CFG._PRECISION)
+        # self.lla_data = [data_lla.latitude, data_lla.longitude, data_lla.altitude]
+        # self.lla_data = np.around(self.lla_data, decimals=CFG._PRECISION)
 
         self.utm_data = [data_odom.pose.pose.position.x, data_odom.pose.pose.position.y, data_odom.pose.pose.position.z]
         self.utm_data = np.around(self.utm_data, decimals=CFG._PRECISION)

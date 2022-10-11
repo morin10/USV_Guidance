@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 root_dir = os.path.dirname(__file__)
@@ -18,8 +18,8 @@ MAX_WP2PLOT = 5                                                             # nu
                                                                             # Change Line 83 of main_gui.py as well (add more Buttons)
 
 # Subscriber Name
-GPS_SUBSCRIBER = "/ublox/fix"   # ROSTOPIC sent from GPS sensor (Heron)
-# GPS_SUBSCRIBER = "/ublox_gps/fix"   # ROSTOPIC sent from GPS sensor (Kingfisher)
+# GPS_SUBSCRIBER = "/ublox/fix"   # ROSTOPIC sent from GPS sensor (Heron)
+GPS_SUBSCRIBER = "/ublox_gps/fix"   # ROSTOPIC sent from GPS sensor (Kingfisher)
 ODOM_SUBSCRIBER = "/heron_info"   # ROSTOPIC sent from 'heron_pn_guidance ublox_filter_node.cpp'
 
 # COLOR PALETTE
