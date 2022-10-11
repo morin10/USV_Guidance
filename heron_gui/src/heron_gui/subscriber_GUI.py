@@ -11,8 +11,8 @@ from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from matplotlib import pyplot as plt
-from geometry_msgs.msg import PoseStamped
 from sensor_msgs.msg import NavSatFix
+from nav_msgs.msg import Odometry
 import heron_gui.config as CFG
 
 class Heron_GUI(tk.Tk):
@@ -32,8 +32,8 @@ class Heron_GUI(tk.Tk):
 
         # Synchronized subscriber for GPS(LLA) and Heron_LLA2UTM(UTM) message
         self.sub_lla = message_filters.Subscriber(CFG.GPS_SUBSCRIBER, NavSatFix)
-        self.sub_utm = message_filters.Subscriber(CFG.UTM_SUBSCRIBER, PoseStamped)
-        ts = message_filters.TimeSynchronizer([self.sub_lla, self.sub_utm], 10)
+        self.sub_odom = message_filters.Subscriber(CFG.ODOM_SUBSCRIBER, PoseStamped)
+        ts = message_filters.TimeSynchronizer([self.sub_lla, self.sub_odom], 10)
         ts.registerCallback(self.callback)
 
         self.wp_points = []
@@ -151,12 +151,12 @@ class Heron_GUI(tk.Tk):
         f.close()
         print("WAYPOINTS are saved into CSV file")
 
-    def callback(self, data_lla, data_utm):
+    def callback(self, data_lla, data_odom):
         # Set Current Position as LLA & UTM & Local_XYZ(the point position on map image (m))
         self.lla_data = [data_lla.latitude, data_lla.longitude, data_lla.altitude]
         self.lla_data = np.around(self.lla_data, decimals=CFG._PRECISION)
 
-        self.utm_data = [data_utm.pose.position.x, data_utm.pose.position.y, data_utm.pose.position.z]
+        self.utm_data = [data_odom.pose.pose.position.x, data_odom.pose.pose.position.y, data_odom.pose.pose.position.z]
         self.utm_data = np.around(self.utm_data, decimals=CFG._PRECISION)
 
         self.pos_data_prev = self.pos_data

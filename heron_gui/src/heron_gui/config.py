@@ -19,7 +19,7 @@ MAX_WP2PLOT = 5                                                             # nu
 
 # Subscriber Name
 GPS_SUBSCRIBER = "/ublox_gps/fix"   # ROSTOPIC sent from GPS sensor
-UTM_SUBSCRIBER = "/Heron_UTMPose"   # ROSTOPIC sent from lla2utm roslaunch
+ODOM_SUBSCRIBER = "/heron_info"   # ROSTOPIC sent from 'heron_pn_guidance ublox_filter_node.cpp'
 
 # COLOR PALETTE
 WAYPOINT_COLOR = "black"
