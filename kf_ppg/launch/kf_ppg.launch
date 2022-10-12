@@ -1,0 +1,8 @@
+<launch>
+    <arg name="config_file" default="$(find kf_ppg)/config/config.yaml"/>
+    <rosparam command="load" file="$(arg config_file)"/>
+
+    <!-- <node pkg="kf_ppg" type="gps_pub.py" name="gps_pub" />
+    <node pkg="kf_ppg" type="imu_pub.py" name="imu_pub"/> -->
+    <node pkg="kf_ppg" type="kf_ppg.py" name="kf_ppg" output="screen"/>
+</launch>

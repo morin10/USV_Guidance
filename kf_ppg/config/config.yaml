@@ -1,0 +1,7 @@
+gain_rho: 0.3
+gain_psi_small: 0.6
+gain_psi_large: 0.6
+max_v: 1.5
+max_thrust: 2
+rho_threshold: 0.6
+acceptance_radius: 0.5
