@@ -18,7 +18,7 @@ import heron_gui.config as CFG
 from tf.transformations import quaternion_from_euler
 
 class Heron_GUI(tk.Tk):
-    def __init__(self, mode):
+    def __init__(self, track_time):
         super().__init__()
 
         self.lla_data = [0.0, 0.0, 0.0]
@@ -31,6 +31,8 @@ class Heron_GUI(tk.Tk):
         self.local_x_arr = np.array([])
         self.local_y_arr = np.array([])
         self.waypoints = []
+        self.track_time = int(track_time)
+        self.track_plot_prev = None
 
         # Subscriber for GPS(LLA)
         rospy.Subscriber(CFG.GPS_SUBSCRIBER, NavSatFix, self.callback)
@@ -38,10 +40,10 @@ class Heron_GUI(tk.Tk):
 
         self.wp_points = []
         self.wp_annots = []
-        self.create_gui(mode)
+        self.create_gui(track_time)
 
     # CREATE GUI (change 'config.py' for customization)
-    def create_gui(self, mode):
+    def create_gui(self, track_time):
         topFrame = tk.Frame(self, width=CFG.FRAME_SIZE, height=CFG.FRAME_SIZE)
         topFrame.pack_propagate(0)
         topFrame.pack(side=tk.TOP)
@@ -77,29 +79,12 @@ class Heron_GUI(tk.Tk):
         self.canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.Y)
         self.cid = self.canvas.mpl_connect('button_press_event', self.onclick)
 
-        # FOOTER depends on MODE (wp_plot, wp_read)
-        self.mode = mode
-        if self.mode == 'wp_plot':
-            # Add Buttons
-            self.btn_export = tk.Button(master=self, text="Publish WP List", command=lambda:self.wp_publish())
-            self.btn_export.pack(side=tk.BOTTOM, fill=tk.X)
+        # Add Buttons
+        self.btn_export = tk.Button(master=self, text="Publish WP List", command=lambda:self.wp_publish())
+        self.btn_export.pack(side=tk.BOTTOM, fill=tk.X)
 
-            self.btn_reset = tk.Button(master=self, text="RESET waypoints", command=lambda:self.wp_reset())
-            self.btn_reset.pack(side=tk.BOTTOM, fill=tk.X)
-            pass
-
-        elif self.mode == 'wp_read':
-            csv_file = open(CFG.CSV_PATH)
-            csvreader = csv.reader(csv_file)
-            header = []
-            header = next(csvreader) # ignore the first row of CSV ([latitude,longitude,altitude,x,y,z])
-
-            for idx, row in enumerate(csvreader):
-                # Find local position to plot (UTM - MAP's_ORIGIN_UTM)
-                csv_local_x = float(row[3]) - CFG.MAP_ORIGIN_UTM[0]
-                csv_local_y = float(row[4]) - CFG.MAP_ORIGIN_UTM[1]
-                self.a.scatter(csv_local_x, csv_local_y, color=CFG.WAYPOINT_COLOR, marker='.', edgecolors='none')
-                self.a.annotate("WP_{}".format(idx+1), (csv_local_x,csv_local_y), color="white", fontsize=8)
+        self.btn_reset = tk.Button(master=self, text="RESET waypoints", command=lambda:self.wp_reset())
+        self.btn_reset.pack(side=tk.BOTTOM, fill=tk.X)
 
     def onclick(self, event):
         global ix, iy
@@ -177,6 +162,10 @@ class Heron_GUI(tk.Tk):
         self.pos_data = np.around(np.subtract(self.utm_data, CFG.MAP_ORIGIN_UTM), decimals=CFG._PRECISION)
 
         # Accumulate pose to show the Path on the map
+        if len(self.local_x_arr) >= self.track_time:
+            self.local_x_arr = np.delete(self.local_x_arr, 0)
+            self.local_y_arr = np.delete(self.local_y_arr, 0)
+
         self.local_x_arr = np.append(self.local_x_arr, self.pos_data[0])
         self.local_y_arr = np.append(self.local_y_arr, self.pos_data[1])
 
@@ -218,9 +207,10 @@ class Heron_GUI(tk.Tk):
                                           self.utm_data[0], self.utm_data[1], self.utm_data[2], \
                                           self.pos_data[0], self.pos_data[1], self.pos_data[2]))        
         
-        
         # Show Path Accumulation
-        self.a.scatter(self.local_x_arr, self.local_y_arr, color=CFG.PATH_TRACK_COLOR, marker='.', edgecolors='none')
+        if self.track_plot_prev is not None:
+            self.track_plot_prev.remove()
+        self.track_plot_prev = self.a.scatter(self.local_x_arr, self.local_y_arr, color=CFG.PATH_TRACK_COLOR, marker='.', edgecolors='none')
 
         # Current Position on map (m)
         if self._scat is not None:
@@ -235,17 +225,16 @@ if __name__ == '__main__':
     rospy.init_node('heron_gui_node')
 
     argumentList = sys.argv[1:]
-    options = "hmt:"
-    long_options = ["Help", "Mode", "Track_Time"]
+    options = "ht:"
+    long_options = ["Help", "Track_Time"]
 
     try:
         arguments, values = getopt.getopt(argumentList, options, long_options)
         for currentArgument, currentValue in arguments:
             if currentArgument in ("-h", "--Help"):
                 print("-h/--Help: To see available arguments.\n-m/--Mode: 'wp_plot' & 'wp_read'")
-            elif currentArgument in ("-m", "--Mode"):
-                print("Current Mode is set to", currentValue)
-                
+            elif currentArgument in ("-t", "--Track_Time"):
+                print("Current Track Time", currentValue)
                 window = Heron_GUI(currentValue)
                 window.mainloop()
             else:

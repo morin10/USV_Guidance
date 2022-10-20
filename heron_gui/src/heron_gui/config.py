@@ -3,8 +3,8 @@
 import os
 root_dir = os.path.dirname(__file__)
 
+# Real Region Map Configurations (Do not change unless the actual operation region has been changed)
 MAP_PATH = os.path.join(root_dir, "../images/map_satel.png")    # map_common.png | map_contour.png | map_satel.png
-
 MAP_ORIGIN_LLA = [36.3672449, 127.3619089, 0.0]     # LLA value of (0, 0) position on the map image
 MAP_ORIGIN_UTM = [353044.30, 4025928.39, 0.0]       # LLA value transformed to UTM via https://www.latlong.net/lat-long-utm.html
 MAP_WIDTH = 126     # 지도 실제 너비 (m)
@@ -18,11 +18,13 @@ MAX_WP2PLOT = 5                                                             # nu
                                                                             # Change Line 83 of main_gui.py as well (add more Buttons)
 
 # Subscriber Name
-# GPS_SUBSCRIBER = "/ublox/fix"   # ROSTOPIC sent from GPS sensor (Heron)
-GPS_SUBSCRIBER = "/ublox_gps/fix"   # ROSTOPIC sent from GPS sensor (Kingfisher)
+GPS_SUBSCRIBER = "/ublox/fix"   # ROSTOPIC sent from GPS sensor (Heron)
+# GPS_SUBSCRIBER = "/ublox_gps/fix"   # ROSTOPIC sent from GPS sensor (Kingfisher)
 ODOM_SUBSCRIBER = "/heron_info"   # ROSTOPIC sent from 'heron_pn_guidance ublox_filter_node.cpp'
-
 WP_PUBLISHER = "/heron_info/waypoints"
+
+# GUI PLOT SIZE
+FRAME_SIZE = 850
 
 # COLOR PALETTE
 WAYPOINT_COLOR = "black"
