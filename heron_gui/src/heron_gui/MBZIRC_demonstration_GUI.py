@@ -119,7 +119,7 @@ class Heron_GUI(tk.Tk):
                 local_y = wp[1] - CFG.MAP_ORIGIN_UTM[1]
 
                 wp_point = self.a.scatter(local_x, local_y, color=CFG.WAYPOINT_COLOR, marker='.', edgecolors='none')
-                wp_annot = self.a.annotate("WP_{}".format(idx+1), (local_x, local_y), color="white")
+                wp_annot = self.a.annotate("{}".format(idx+1), (local_x, local_y), color="white")
 
                 self.wp_points.append(wp_point)
                 self.wp_annots.append(wp_annot)
