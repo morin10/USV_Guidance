@@ -14,8 +14,7 @@ _PRECISION = 7      # lla, utm decimal precision
 # Waypoint CSV File Path
 CSV_PATH = os.path.join(root_dir, "../csv_files/square.csv")                # CSV file to read in '-m wp_read' mode
 EXPORT_CSV_PATH = os.path.join(root_dir, "../csv_files/export_test.csv")    # CSV file to export from '-m wp_plot' mode
-MAX_WP2PLOT = 5                                                             # number of waypoints to export from '-m wp_plot' mode
-                                                                            # Change Line 83 of main_gui.py as well (add more Buttons)
+MAX_WP2PLOT = 8                                                             # number of waypoints to export from '-m wp_plot' mode
 
 # Subscriber Name
 GPS_SUBSCRIBER = "/ublox/fix"   # ROSTOPIC sent from GPS sensor (Heron)
